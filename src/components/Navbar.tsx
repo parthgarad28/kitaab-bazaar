@@ -26,7 +26,7 @@ const Navbar = () => {
             <BookOpen className="h-5 w-5 text-primary-foreground" />
           </div>
           <span className="text-xl font-extrabold text-foreground">
-            Student<span className="text-gradient">Bazaar</span>
+            Kitaab<span className="text-gradient">Kart</span>
           </span>
         </Link>
 
