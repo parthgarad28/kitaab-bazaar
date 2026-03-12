@@ -15,7 +15,7 @@ const Footer = () => {
                 <BookOpen className="h-4 w-4 text-primary-foreground" />
               </div>
               <span className="text-lg font-extrabold text-foreground">
-                Student<span className="text-gradient">Bazaar</span>
+                Kitaab<span className="text-gradient">Kart</span>
               </span>
             </Link>
             <p className="text-sm text-muted-foreground leading-relaxed">
