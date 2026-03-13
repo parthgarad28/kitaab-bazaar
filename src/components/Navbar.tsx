@@ -1,12 +1,15 @@
 import { useLanguage } from "@/contexts/LanguageContext";
-import { Link, useLocation } from "react-router-dom";
-import { BookOpen, Menu, X, Globe } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { BookOpen, Menu, X, Globe, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
 const Navbar = () => {
   const { t, lang, setLang } = useLanguage();
+  const { user, signOut } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const navLinks = [
@@ -16,6 +19,11 @@ const Navbar = () => {
   ];
 
   const isActive = (path: string) => location.pathname === path;
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate("/");
+  };
 
   return (
     <nav className="sticky top-0 z-50 border-b border-border bg-card/80 backdrop-blur-lg">
@@ -58,10 +66,26 @@ const Navbar = () => {
             <Globe className="h-4 w-4" />
             {t("general.language")}
           </Button>
-          <Button variant="outline" size="sm">{t("nav.login")}</Button>
-          <Button size="sm" className="gradient-primary text-primary-foreground border-0">
-            {t("nav.signup")}
-          </Button>
+          {user ? (
+            <>
+              <span className="text-sm text-muted-foreground truncate max-w-[150px]">
+                {user.user_metadata?.display_name || user.email}
+              </span>
+              <Button variant="outline" size="sm" onClick={handleSignOut} className="gap-1.5">
+                <LogOut className="h-4 w-4" />
+                {lang === "hi" ? "लॉगआउट" : "Logout"}
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button variant="outline" size="sm" onClick={() => navigate("/auth")}>
+                {t("nav.login")}
+              </Button>
+              <Button size="sm" className="gradient-primary text-primary-foreground border-0" onClick={() => navigate("/auth")}>
+                {t("nav.signup")}
+              </Button>
+            </>
+          )}
         </div>
 
         {/* Mobile toggle */}
@@ -101,7 +125,16 @@ const Navbar = () => {
                 <Globe className="h-4 w-4" />
                 {t("general.language")}
               </Button>
-              <Button variant="outline" size="sm" className="flex-1">{t("nav.login")}</Button>
+              {user ? (
+                <Button variant="outline" size="sm" className="flex-1 gap-1.5" onClick={handleSignOut}>
+                  <LogOut className="h-4 w-4" />
+                  {lang === "hi" ? "लॉगआउट" : "Logout"}
+                </Button>
+              ) : (
+                <Button variant="outline" size="sm" className="flex-1" onClick={() => { setMobileOpen(false); navigate("/auth"); }}>
+                  {t("nav.login")}
+                </Button>
+              )}
             </div>
           </div>
         </div>
