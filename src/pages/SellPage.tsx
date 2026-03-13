@@ -1,15 +1,24 @@
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Camera, Upload } from "lucide-react";
-import { useState } from "react";
+import { Camera, Upload, X, Loader2 } from "lucide-react";
+import { useState, useRef } from "react";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
+import { useNavigate } from "react-router-dom";
 
 const SellPage = () => {
   const { t, lang } = useLanguage();
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -20,10 +29,73 @@ const SellPage = () => {
     location: "",
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error(lang === "hi" ? "फाइल 5MB से छोटी होनी चाहिए" : "File must be under 5MB");
+      return;
+    }
+    setImageFile(file);
+    setImagePreview(URL.createObjectURL(file));
+  };
+
+  const removeImage = () => {
+    setImageFile(null);
+    setImagePreview(null);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast.success(t("sell.success"));
-    setFormData({ title: "", description: "", category: "", condition: "", price: "", whatsapp: "", location: "" });
+    if (!user) {
+      toast.error(lang === "hi" ? "कृपया पहले लॉगिन करें" : "Please login first");
+      navigate("/auth");
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      let imageUrl: string | null = null;
+
+      if (imageFile) {
+        const fileExt = imageFile.name.split(".").pop();
+        const filePath = `${user.id}/${crypto.randomUUID()}.${fileExt}`;
+        const { error: uploadError } = await supabase.storage
+          .from("listing-images")
+          .upload(filePath, imageFile);
+        if (uploadError) throw uploadError;
+
+        const { data: { publicUrl } } = supabase.storage
+          .from("listing-images")
+          .getPublicUrl(filePath);
+        imageUrl = publicUrl;
+      }
+
+      const { error } = await supabase.from("listings").insert({
+        user_id: user.id,
+        title: formData.title,
+        description: formData.description,
+        category: formData.category,
+        condition: formData.condition,
+        price: parseInt(formData.price),
+        seller_whatsapp: formData.whatsapp,
+        seller_name: user.user_metadata?.display_name || user.email || "Unknown",
+        location: formData.location,
+        image_url: imageUrl,
+      });
+
+      if (error) throw error;
+
+      toast.success(t("sell.success"));
+      setFormData({ title: "", description: "", category: "", condition: "", price: "", whatsapp: "", location: "" });
+      removeImage();
+      navigate("/browse");
+    } catch (err: any) {
+      toast.error(err.message || (lang === "hi" ? "कुछ गलत हो गया" : "Something went wrong"));
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -40,12 +112,35 @@ const SellPage = () => {
           {/* Photo Upload */}
           <div>
             <Label className={lang === "hi" ? "font-hindi" : ""}>{t("sell.photo")}</Label>
-            <div className="mt-2 border-2 border-dashed border-border rounded-xl p-8 text-center bg-muted/30 hover:bg-muted/50 transition-colors cursor-pointer">
-              <Camera className="h-10 w-10 text-muted-foreground mx-auto mb-2" />
-              <p className="text-sm text-muted-foreground">
-                {lang === "hi" ? "फोटो जोड़ने के लिए क्लिक करें" : "Click to add photos"}
-              </p>
-            </div>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handleImageSelect}
+            />
+            {imagePreview ? (
+              <div className="mt-2 relative inline-block">
+                <img src={imagePreview} alt="Preview" className="rounded-xl max-h-48 object-cover border border-border" />
+                <button
+                  type="button"
+                  onClick={removeImage}
+                  className="absolute -top-2 -right-2 bg-destructive text-destructive-foreground rounded-full p-1"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+            ) : (
+              <div
+                onClick={() => fileInputRef.current?.click()}
+                className="mt-2 border-2 border-dashed border-border rounded-xl p-8 text-center bg-muted/30 hover:bg-muted/50 transition-colors cursor-pointer"
+              >
+                <Camera className="h-10 w-10 text-muted-foreground mx-auto mb-2" />
+                <p className="text-sm text-muted-foreground">
+                  {lang === "hi" ? "फोटो जोड़ने के लिए क्लिक करें" : "Click to add photos"}
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Title */}
@@ -140,9 +235,9 @@ const SellPage = () => {
             />
           </div>
 
-          <Button type="submit" size="lg" className="w-full gradient-primary text-primary-foreground border-0 font-bold gap-2">
-            <Upload className="h-5 w-5" />
-            {t("sell.submit")}
+          <Button type="submit" size="lg" disabled={submitting} className="w-full gradient-primary text-primary-foreground border-0 font-bold gap-2">
+            {submitting ? <Loader2 className="h-5 w-5 animate-spin" /> : <Upload className="h-5 w-5" />}
+            {submitting ? (lang === "hi" ? "अपलोड हो रहा है..." : "Uploading...") : t("sell.submit")}
           </Button>
         </form>
       </div>
