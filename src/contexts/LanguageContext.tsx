@@ -33,9 +33,23 @@ const translations: Record<string, Record<Language, string>> = {
   "listing.price": { en: "Price", hi: "कीमत" },
   "listing.contact": { en: "Contact Seller", hi: "विक्रेता से संपर्क करें" },
   "listing.whatsapp": { en: "Chat on WhatsApp", hi: "WhatsApp पर चैट करें" },
+  "listing.like_new": { en: "Like New", hi: "नए जैसी" },
+  "listing.good": { en: "Good Condition", hi: "अच्छी स्थिति" },
+  "listing.acceptable": { en: "Acceptable", hi: "स्वीकार्य" },
+  "listing.heavily_used": { en: "Heavily Used", hi: "बहुत इस्तेमाल किया" },
   "listing.new": { en: "Like New", hi: "नए जैसी" },
-  "listing.good": { en: "Good", hi: "अच्छी" },
-  "listing.fair": { en: "Fair", hi: "ठीक" },
+  "listing.fair": { en: "Acceptable", hi: "स्वीकार्य" },
+
+  // Reviews
+  "review.title": { en: "Seller Reviews", hi: "विक्रेता समीक्षाएं" },
+  "review.write": { en: "Write a Review", hi: "समीक्षा लिखें" },
+  "review.submit": { en: "Submit Review", hi: "समीक्षा भेजें" },
+  "review.placeholder": { en: "Share your experience with this seller...", hi: "इस विक्रेता के साथ अपना अनुभव साझा करें..." },
+  "review.avgRating": { en: "Average Rating", hi: "औसत रेटिंग" },
+  "review.reviews": { en: "reviews", hi: "समीक्षाएं" },
+  "review.trustedSeller": { en: "Trusted Seller", hi: "विश्वसनीय विक्रेता" },
+  "review.banned": { en: "Seller Banned", hi: "विक्रेता प्रतिबंधित" },
+  "review.noReviews": { en: "No reviews yet", hi: "अभी कोई समीक्षा नहीं" },
   "listing.posted": { en: "Posted by", hi: "द्वारा पोस्ट" },
 
   // Browse
