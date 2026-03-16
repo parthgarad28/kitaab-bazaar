@@ -4,10 +4,13 @@ import { MapPin, Tag } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 
-const conditionColors = {
+const conditionColors: Record<string, string> = {
+  like_new: "bg-success/10 text-success border-success/20",
   new: "bg-success/10 text-success border-success/20",
   good: "bg-primary/10 text-primary border-primary/20",
+  acceptable: "bg-warning/10 text-warning border-warning/20",
   fair: "bg-warning/10 text-warning border-warning/20",
+  heavily_used: "bg-destructive/10 text-destructive border-destructive/20",
 };
 
 const categoryIcons: Record<string, string> = {
@@ -20,9 +23,10 @@ const ListingCard = ({ listing }: { listing: Listing }) => {
   const { lang, t } = useLanguage();
 
   const title = lang === "hi" ? listing.titleHi : listing.title;
-  const conditionLabel =
-    listing.condition === "new" ? t("listing.new") :
-    listing.condition === "good" ? t("listing.good") : t("listing.fair");
+  const conditionKey = listing.condition === "like_new" || listing.condition === "new" ? "listing.like_new" :
+    listing.condition === "good" ? "listing.good" :
+    listing.condition === "acceptable" || listing.condition === "fair" ? "listing.acceptable" : "listing.heavily_used";
+  const conditionLabel = t(conditionKey);
 
   return (
     <Link

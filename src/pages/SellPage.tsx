@@ -187,9 +187,10 @@ const SellPage = () => {
               <Select value={formData.condition} onValueChange={(v) => setFormData({ ...formData, condition: v })}>
                 <SelectTrigger className="mt-1.5"><SelectValue placeholder={t("sell.condition")} /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="new">{t("listing.new")}</SelectItem>
+                  <SelectItem value="like_new">{t("listing.like_new")}</SelectItem>
                   <SelectItem value="good">{t("listing.good")}</SelectItem>
-                  <SelectItem value="fair">{t("listing.fair")}</SelectItem>
+                  <SelectItem value="acceptable">{t("listing.acceptable")}</SelectItem>
+                  <SelectItem value="heavily_used">{t("listing.heavily_used")}</SelectItem>
                 </SelectContent>
               </Select>
             </div>

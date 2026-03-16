@@ -3,12 +3,47 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { mockListings } from "@/data/mockListings";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, MapPin, MessageCircle, Phone, User } from "lucide-react";
+import { ArrowLeft, MapPin, MessageCircle, Phone, User, Shield } from "lucide-react";
+import SellerReviews from "@/components/SellerReviews";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import StarRating from "@/components/StarRating";
+
+const conditionLabels: Record<string, string> = {
+  like_new: "listing.like_new",
+  new: "listing.like_new",
+  good: "listing.good",
+  acceptable: "listing.acceptable",
+  fair: "listing.acceptable",
+  heavily_used: "listing.heavily_used",
+};
+
+const conditionColors: Record<string, string> = {
+  like_new: "bg-success/10 text-success border-success/20",
+  new: "bg-success/10 text-success border-success/20",
+  good: "bg-primary/10 text-primary border-primary/20",
+  acceptable: "bg-warning/10 text-warning border-warning/20",
+  fair: "bg-warning/10 text-warning border-warning/20",
+  heavily_used: "bg-destructive/10 text-destructive border-destructive/20",
+};
 
 const ListingDetailPage = () => {
   const { id } = useParams();
   const { t, lang } = useLanguage();
   const listing = mockListings.find((l) => l.id === id);
+  const [sellerRating, setSellerRating] = useState<{ avg: number; count: number }>({ avg: 0, count: 0 });
+
+  // For mock listings, use a fake seller_id derived from sellerWhatsapp
+  const sellerId = listing ? listing.sellerWhatsapp : "";
+
+  useEffect(() => {
+    if (!sellerId) return;
+    supabase.rpc("get_seller_avg_rating", { p_seller_id: sellerId }).then(({ data }) => {
+      if (data && data[0]) {
+        setSellerRating({ avg: Number(data[0].avg_rating), count: Number(data[0].review_count) });
+      }
+    });
+  }, [sellerId]);
 
   if (!listing) {
     return (
@@ -27,9 +62,8 @@ const ListingDetailPage = () => {
 
   const title = lang === "hi" ? listing.titleHi : listing.title;
   const description = lang === "hi" ? listing.descriptionHi : listing.description;
-  const conditionLabel =
-    listing.condition === "new" ? t("listing.new") :
-    listing.condition === "good" ? t("listing.good") : t("listing.fair");
+  const conditionLabel = t(conditionLabels[listing.condition] || "listing.good");
+  const isTrusted = sellerRating.avg >= 4 && sellerRating.count >= 2;
 
   const categoryIcons: Record<string, string> = {
     books: "📚", notes: "📝", stationery: "✏️",
@@ -57,11 +91,13 @@ const ListingDetailPage = () => {
 
           {/* Details */}
           <div>
-            <div className="flex items-center gap-2 mb-3">
+            <div className="flex items-center gap-2 mb-3 flex-wrap">
               <Badge variant="secondary" className="capitalize">
                 {t(`cat.${listing.category}`)}
               </Badge>
-              <Badge variant="outline">{conditionLabel}</Badge>
+              <span className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold ${conditionColors[listing.condition] || ""}`}>
+                {conditionLabel}
+              </span>
             </div>
 
             <h1 className={`text-2xl md:text-3xl font-extrabold text-foreground mb-2 ${lang === "hi" ? "font-hindi" : ""}`}>
@@ -92,15 +128,27 @@ const ListingDetailPage = () => {
                 <div className="h-10 w-10 rounded-full gradient-primary flex items-center justify-center">
                   <User className="h-5 w-5 text-primary-foreground" />
                 </div>
-                <div>
-                  <p className="font-bold text-foreground text-sm">{t("listing.posted")} {listing.sellerName}</p>
-                  <p className="text-xs text-muted-foreground">+{listing.sellerWhatsapp}</p>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <p className="font-bold text-foreground text-sm">{t("listing.posted")} {listing.sellerName}</p>
+                    {isTrusted && (
+                      <Badge className="bg-success/10 text-success border-success/20 gap-1 text-xs">
+                        <Shield className="h-3 w-3" /> {t("review.trustedSeller")}
+                      </Badge>
+                    )}
+                  </div>
+                  {sellerRating.count > 0 && (
+                    <div className="flex items-center gap-1 mt-1">
+                      <StarRating rating={sellerRating.avg} size="sm" />
+                      <span className="text-xs text-muted-foreground">({sellerRating.count})</span>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
 
             {/* Actions */}
-            <div className="flex flex-col sm:flex-row gap-3">
+            <div className="flex flex-col sm:flex-row gap-3 mb-8">
               <Button asChild size="lg" className="gradient-primary text-primary-foreground border-0 font-bold flex-1 gap-2">
                 <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
                   <MessageCircle className="h-5 w-5" />
@@ -111,6 +159,12 @@ const ListingDetailPage = () => {
                 <Phone className="h-5 w-5" />
                 {t("listing.contact")}
               </Button>
+            </div>
+
+            {/* Seller Reviews */}
+            <div className="border-t border-border pt-6">
+              <h2 className="text-lg font-bold text-foreground mb-4">{t("review.title")}</h2>
+              <SellerReviews sellerId={sellerId} sellerName={listing.sellerName} listingId={listing.id} />
             </div>
           </div>
         </div>
