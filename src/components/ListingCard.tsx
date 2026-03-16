@@ -23,9 +23,10 @@ const ListingCard = ({ listing }: { listing: Listing }) => {
   const { lang, t } = useLanguage();
 
   const title = lang === "hi" ? listing.titleHi : listing.title;
-  const conditionLabel =
-    listing.condition === "new" ? t("listing.new") :
-    listing.condition === "good" ? t("listing.good") : t("listing.fair");
+  const conditionKey = listing.condition === "like_new" || listing.condition === "new" ? "listing.like_new" :
+    listing.condition === "good" ? "listing.good" :
+    listing.condition === "acceptable" || listing.condition === "fair" ? "listing.acceptable" : "listing.heavily_used";
+  const conditionLabel = t(conditionKey);
 
   return (
     <Link
