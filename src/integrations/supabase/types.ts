@@ -104,12 +104,87 @@ export type Database = {
         }
         Relationships: []
       }
+      seller_reviews: {
+        Row: {
+          comment: string | null
+          created_at: string
+          id: string
+          listing_id: string | null
+          rating: number
+          reviewer_id: string
+          seller_id: string
+        }
+        Insert: {
+          comment?: string | null
+          created_at?: string
+          id?: string
+          listing_id?: string | null
+          rating: number
+          reviewer_id: string
+          seller_id: string
+        }
+        Update: {
+          comment?: string | null
+          created_at?: string
+          id?: string
+          listing_id?: string | null
+          rating?: number
+          reviewer_id?: string
+          seller_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "seller_reviews_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "listings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      seller_strikes: {
+        Row: {
+          ban_until: string | null
+          created_at: string
+          id: string
+          is_permanent: boolean
+          reason: string
+          seller_id: string
+          strike_number: number
+        }
+        Insert: {
+          ban_until?: string | null
+          created_at?: string
+          id?: string
+          is_permanent?: boolean
+          reason: string
+          seller_id: string
+          strike_number?: number
+        }
+        Update: {
+          ban_until?: string | null
+          created_at?: string
+          id?: string
+          is_permanent?: boolean
+          reason?: string
+          seller_id?: string
+          strike_number?: number
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_seller_avg_rating: {
+        Args: { p_seller_id: string }
+        Returns: {
+          avg_rating: number
+          review_count: number
+        }[]
+      }
+      is_seller_banned: { Args: { p_seller_id: string }; Returns: boolean }
     }
     Enums: {
       [_ in never]: never
