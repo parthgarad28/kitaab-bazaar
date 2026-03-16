@@ -4,10 +4,13 @@ import { MapPin, Tag } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 
-const conditionColors = {
+const conditionColors: Record<string, string> = {
+  like_new: "bg-success/10 text-success border-success/20",
   new: "bg-success/10 text-success border-success/20",
   good: "bg-primary/10 text-primary border-primary/20",
+  acceptable: "bg-warning/10 text-warning border-warning/20",
   fair: "bg-warning/10 text-warning border-warning/20",
+  heavily_used: "bg-destructive/10 text-destructive border-destructive/20",
 };
 
 const categoryIcons: Record<string, string> = {
