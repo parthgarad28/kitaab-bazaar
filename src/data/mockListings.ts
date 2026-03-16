@@ -6,7 +6,7 @@ export interface Listing {
   descriptionHi: string;
   price: number;
   category: "books" | "notes" | "stationery";
-  condition: "new" | "good" | "fair";
+  condition: "new" | "good" | "fair" | "like_new" | "acceptable" | "heavily_used";
   subject: string;
   location: string;
   sellerName: string;
