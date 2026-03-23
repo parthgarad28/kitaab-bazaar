@@ -3,7 +3,7 @@ import { mockListings } from "@/data/mockListings";
 import ListingCard from "@/components/ListingCard";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { BookOpen, MessageCircle, CreditCard, ArrowRight, Search } from "lucide-react";
+import { BookOpen, MessageCircle, CreditCard, ArrowRight, Search, Heart, Truck, Package } from "lucide-react";
 
 const Index = () => {
   const { t, lang } = useLanguage();
