@@ -14,6 +14,51 @@ export type Database = {
   }
   public: {
     Tables: {
+      donations: {
+        Row: {
+          book_details: string
+          city: string
+          created_at: string
+          donor_email: string | null
+          donor_name: string
+          donor_phone: string
+          id: string
+          number_of_books: number
+          pickup_address: string
+          pincode: string
+          status: string
+          user_id: string | null
+        }
+        Insert: {
+          book_details: string
+          city: string
+          created_at?: string
+          donor_email?: string | null
+          donor_name: string
+          donor_phone: string
+          id?: string
+          number_of_books?: number
+          pickup_address: string
+          pincode: string
+          status?: string
+          user_id?: string | null
+        }
+        Update: {
+          book_details?: string
+          city?: string
+          created_at?: string
+          donor_email?: string | null
+          donor_name?: string
+          donor_phone?: string
+          id?: string
+          number_of_books?: number
+          pickup_address?: string
+          pincode?: string
+          status?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       listings: {
         Row: {
           category: string
