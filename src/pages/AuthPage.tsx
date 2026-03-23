@@ -31,7 +31,7 @@ const AuthPage = () => {
         toast.error(error.message);
       } else {
         toast.success(lang === "hi" ? "सफलतापूर्वक लॉगिन हुआ!" : "Logged in successfully!");
-        navigate("/");
+        navigate(redirectTo);
       }
     } else {
       const { error } = await signUp(email, password, displayName);
