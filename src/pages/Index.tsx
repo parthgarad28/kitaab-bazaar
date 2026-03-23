@@ -3,7 +3,7 @@ import { mockListings } from "@/data/mockListings";
 import ListingCard from "@/components/ListingCard";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { BookOpen, MessageCircle, CreditCard, ArrowRight, Search } from "lucide-react";
+import { BookOpen, MessageCircle, CreditCard, ArrowRight, Search, Heart, Truck, Package } from "lucide-react";
 
 const Index = () => {
   const { t, lang } = useLanguage();
@@ -87,6 +87,43 @@ const Index = () => {
               </p>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* Donation Section */}
+      <section className="container mt-16">
+        <div className="rounded-2xl bg-gradient-to-br from-primary/5 via-accent/10 to-primary/5 border border-primary/20 p-8 md:p-12">
+          <div className="max-w-3xl mx-auto text-center">
+            <div className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 mb-4">
+              <Heart className="h-7 w-7 text-primary" />
+            </div>
+            <h2 className={`text-2xl md:text-3xl font-extrabold text-foreground mb-3 ${lang === "hi" ? "font-hindi" : ""}`}>
+              {lang === "hi" ? "किताबें दान करें 📚" : "Donate Your Books 📚"}
+            </h2>
+            <p className={`text-muted-foreground mb-6 max-w-xl mx-auto ${lang === "hi" ? "font-hindi" : ""}`}>
+              {lang === "hi"
+                ? "अपनी पुरानी किताबें Kitaab Kart को दान करें और ज़रूरतमंद छात्रों की मदद करें।"
+                : "Donate your old books to Kitaab Kart and help students in need."}
+            </p>
+            <div className="grid md:grid-cols-3 gap-4 mb-8 text-left">
+              {[
+                { icon: Package, text: lang === "hi" ? "बस किताबें पैक करें और हमें बताएं" : "Just pack your books and let us know" },
+                { icon: Truck, text: lang === "hi" ? "हम पिकअप की व्यवस्था करेंगे — डिलीवरी का खर्च हम देंगे" : "We arrange pickup — delivery fees on us" },
+                { icon: Heart, text: lang === "hi" ? "डिलीवरी वाले को किताबें सौंप दें, बस!" : "Hand over books to delivery person, done!" },
+              ].map((item, i) => (
+                <div key={i} className="flex items-start gap-3 p-4 rounded-xl bg-card border border-border">
+                  <item.icon className="h-5 w-5 text-primary mt-0.5 shrink-0" />
+                  <span className={`text-sm text-foreground ${lang === "hi" ? "font-hindi" : ""}`}>{item.text}</span>
+                </div>
+              ))}
+            </div>
+            <Button asChild size="lg" className="gradient-primary text-primary-foreground border-0 font-bold gap-2">
+              <Link to="/donate">
+                <Heart className="h-4 w-4" />
+                {lang === "hi" ? "किताबें दान करें" : "Donate Books"}
+              </Link>
+            </Button>
+          </div>
         </div>
       </section>
 

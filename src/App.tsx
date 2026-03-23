@@ -12,6 +12,7 @@ import BrowsePage from "./pages/BrowsePage.tsx";
 import SellPage from "./pages/SellPage.tsx";
 import AuthPage from "./pages/AuthPage.tsx";
 import ListingDetailPage from "./pages/ListingDetailPage.tsx";
+import DonatePage from "./pages/DonatePage.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -31,6 +32,7 @@ const App = () => (
               <Route path="/sell" element={<SellPage />} />
               <Route path="/auth" element={<AuthPage />} />
               <Route path="/listing/:id" element={<ListingDetailPage />} />
+              <Route path="/donate" element={<DonatePage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
             <Footer />

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
@@ -17,6 +17,9 @@ const AuthPage = () => {
   const { signIn, signUp } = useAuth();
   const { lang } = useLanguage();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const redirectTo = searchParams.get("redirect") || "/";
+  const loginMessage = searchParams.get("message");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,7 +31,7 @@ const AuthPage = () => {
         toast.error(error.message);
       } else {
         toast.success(lang === "hi" ? "सफलतापूर्वक लॉगिन हुआ!" : "Logged in successfully!");
-        navigate("/");
+        navigate(redirectTo);
       }
     } else {
       const { error } = await signUp(email, password, displayName);
@@ -56,6 +59,11 @@ const AuthPage = () => {
               ? (lang === "hi" ? "अपने अकाउंट में लॉगिन करें" : "Sign in to your account")
               : (lang === "hi" ? "नया अकाउंट बनाएं" : "Create a new account")}
           </p>
+          {loginMessage && (
+            <p className="text-sm text-primary font-medium mt-2 bg-primary/10 rounded-lg px-3 py-2">
+              {loginMessage}
+            </p>
+          )}
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4 bg-card border border-border rounded-xl p-6">
