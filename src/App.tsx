@@ -32,6 +32,7 @@ const App = () => (
               <Route path="/sell" element={<SellPage />} />
               <Route path="/auth" element={<AuthPage />} />
               <Route path="/listing/:id" element={<ListingDetailPage />} />
+              <Route path="/donate" element={<DonatePage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
             <Footer />

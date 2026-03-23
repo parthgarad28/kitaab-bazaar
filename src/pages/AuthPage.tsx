@@ -59,6 +59,11 @@ const AuthPage = () => {
               ? (lang === "hi" ? "अपने अकाउंट में लॉगिन करें" : "Sign in to your account")
               : (lang === "hi" ? "नया अकाउंट बनाएं" : "Create a new account")}
           </p>
+          {loginMessage && (
+            <p className="text-sm text-primary font-medium mt-2 bg-primary/10 rounded-lg px-3 py-2">
+              {loginMessage}
+            </p>
+          )}
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4 bg-card border border-border rounded-xl p-6">
