@@ -15,15 +15,14 @@ const Index = () => {
   ];
 
   return (
-    <div className="min-h-screen">
-      {/* Hero */}
+<div className="min-h-screen bg-[#FFF8F3]">      {/* Hero */}
       <section className="relative overflow-hidden gradient-hero py-20 md:py-28">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(255,255,255,0.15),transparent_70%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(255,165,0,0.08),transparent_70%)]" />
         <div className="container relative text-center">
-          <h1 className={`text-3xl md:text-5xl lg:text-6xl font-black text-primary-foreground leading-tight mb-4 animate-fade-in ${lang === "hi" ? "font-hindi" : ""}`}>
+          <h1 className={`text-3xl md:text-5xl lg:text-6xl font-black text-foreground leading-tight mb-4 animate-fade-in ${lang === "hi" ? "font-hindi" : ""}`}>
             {t("hero.title")}
           </h1>
-          <p className={`text-base md:text-xl text-primary-foreground/80 max-w-2xl mx-auto mb-8 animate-fade-in ${lang === "hi" ? "font-hindi" : ""}`} style={{ animationDelay: "0.1s" }}>
+          <p className={`text-base md:text-xl text-muted-foreground max-w-2xl mx-auto mb-8 animate-fade-in ${lang === "hi" ? "font-hindi" : ""}`} style={{ animationDelay: "0.1s" }}>
             {t("hero.subtitle")}
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 animate-fade-in" style={{ animationDelay: "0.2s" }}>
@@ -76,7 +75,7 @@ const Index = () => {
               <div className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 mb-4">
                 <step.icon className="h-7 w-7 text-primary" />
               </div>
-              <div className="inline-flex items-center justify-center h-6 w-6 rounded-full gradient-primary text-primary-foreground text-xs font-bold mb-3">
+              <div className="inline-flex items-center justify-center h-6 w-6 rounded-full gradient-primary text-foreground text-xs font-bold mb-3">
                 {i + 1}
               </div>
               <h3 className={`text-base font-bold text-foreground mb-2 ${lang === "hi" ? "font-hindi" : ""}`}>
