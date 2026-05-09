@@ -93,7 +93,7 @@ const LandingPage = () => {
             </span>
             <h1 className="text-3xl md:text-5xl font-black text-primary-foreground leading-tight mb-4 animate-fade-in">
               Score High in Sanskrit. <br />
-              <span className="text-cream">The Easy Way.</span>
+              <span className="text-primary-foreground/90">The Easy Way.</span>
             </h1>
             <p className="text-base md:text-lg text-primary-foreground/90 mb-6 max-w-lg mx-auto md:mx-0 animate-fade-in" style={{ animationDelay: "0.1s" }}>
               Specialised coaching for Class 10 students in Aurangabad — by Sulbha Ma'am, with 15+ years of board-exam experience.
